@@ -8,9 +8,9 @@ package com.atlas.flight.shared.messaging;
 public final class EventTopics {
 
     // ── Flight Service produces ───────────────────────────────────────────────
-    public static final String FLIGHT_CREATED = "flight.flight.created";
-    public static final String FLIGHT_UPDATED = "flight.flight.updated";
-    public static final String FLIGHT_DELETED = "flight.flight.deleted";
+    public static final String FLIGHT_CREATED = "flight.created";
+    public static final String FLIGHT_UPDATED = "flight.updated";
+    public static final String FLIGHT_DELETED = "flight.deleted";
 
     private EventTopics() {}
 }
