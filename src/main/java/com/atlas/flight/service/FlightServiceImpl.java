@@ -13,6 +13,7 @@ import com.atlas.flight.entity.FlightSegment;
 import com.atlas.flight.entity.FlightStatus;
 import com.atlas.flight.entity.Money;
 import com.atlas.flight.event.FlightDeletedPayload;
+import com.atlas.flight.shared.messaging.EventType;
 import com.atlas.flight.event.FlightEventPayloadFactory;
 import com.atlas.flight.exception.CapacityBelowReservedException;
 import com.atlas.flight.exception.DuplicateFlightException;
@@ -82,7 +83,7 @@ public class FlightServiceImpl implements FlightService {
         applySegments(flight, request.segments());
 
         Flight saved = flightRepository.save(flight);
-        outboxEventWriter.write(saved.getId(), "FlightCreated", payloadFactory.toCatalogPayload(saved));
+        outboxEventWriter.write(saved.getId(), EventType.FLIGHT_CREATED, payloadFactory.toCatalogPayload(saved));
 
         log.info("Flight created: flightId={}, flightNumber={}, totalSeats={}",
                 saved.getId(), saved.getFlightNumber(), saved.getTotalSeats());
@@ -120,7 +121,7 @@ public class FlightServiceImpl implements FlightService {
                 toMoney(request.basePrice()));
         applySegments(flight, request.segments());
 
-        outboxEventWriter.write(flight.getId(), "FlightUpdated", payloadFactory.toCatalogPayload(flight));
+        outboxEventWriter.write(flight.getId(), EventType.FLIGHT_UPDATED, payloadFactory.toCatalogPayload(flight));
 
         log.info("Flight updated: flightId={}, flightNumber={}, totalSeats={}",
                 flight.getId(), flight.getFlightNumber(), flight.getTotalSeats());
@@ -133,7 +134,7 @@ public class FlightServiceImpl implements FlightService {
     public void withdrawFlight(UUID flightId) {
         Flight flight = findFlight(flightId);
         flight.withdraw();
-        outboxEventWriter.write(flight.getId(), "FlightDeleted", new FlightDeletedPayload(flight.getId()));
+        outboxEventWriter.write(flight.getId(), EventType.FLIGHT_DELETED, new FlightDeletedPayload(flight.getId()));
 
         log.info("Flight withdrawn: flightId={}", flight.getId());
     }

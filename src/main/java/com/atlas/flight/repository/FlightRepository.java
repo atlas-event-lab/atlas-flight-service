@@ -36,7 +36,7 @@ public interface FlightRepository extends JpaRepository<Flight, UUID> {
           FROM flights f
           LEFT JOIN outbox o
             ON o.aggregate_id = f.id
-           AND o.event_type = 'FlightCreated'
+           AND o.event_type = 'FLIGHT_CREATED'
           WHERE o.id IS NULL
           AND f.status = 'ACTIVE'
           """, nativeQuery = true)

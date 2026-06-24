@@ -5,6 +5,7 @@ import com.atlas.flight.entity.OutboxStatus;
 import com.atlas.flight.messaging.OutboxRelay;
 import com.atlas.flight.repository.OutboxRepository;
 import com.atlas.flight.shared.messaging.EventTopics;
+import com.atlas.flight.shared.messaging.EventType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,8 +41,8 @@ class OutboxRelayTest {
     private OutboxEvent pendingFlightCreated() {
         UUID flightId = UUID.randomUUID();
         String envelope = "{\"eventId\":\"" + UUID.randomUUID()
-                + "\",\"eventType\":\"FlightCreated\",\"payload\":{\"flightId\":\"" + flightId + "\"}}";
-        return new OutboxEvent(UUID.randomUUID(), "Flight", flightId, "FlightCreated", 1, envelope);
+                + "\",\"eventType\":\"FLIGHT_CREATED\",\"payload\":{\"flightId\":\"" + flightId + "\"}}";
+        return new OutboxEvent(UUID.randomUUID(), "Flight", flightId, EventType.FLIGHT_CREATED, 1, envelope);
     }
 
     @Test

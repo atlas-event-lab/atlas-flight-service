@@ -1,27 +1,3 @@
--- INSERT INTO airlines (id, iata_code, name, country) VALUES
---     ('a1111111-1111-1111-1111-111111111111', 'AT', 'Atlas Airways', 'Peru'),
---     ('a2222222-2222-2222-2222-222222222222', 'IB', 'Iberia', 'Spain');
---
--- INSERT INTO airports (id, iata_code, name, city, country) VALUES
---     ('b1111111-1111-1111-1111-111111111111', 'LIM', 'Jorge Chavez International', 'Lima', 'Peru'),
---     ('b2222222-2222-2222-2222-222222222222', 'MAD', 'Adolfo Suarez Madrid-Barajas', 'Madrid', 'Spain'),
---     ('b3333333-3333-3333-3333-333333333333', 'JFK', 'John F. Kennedy International', 'New York', 'United States');
---
--- INSERT INTO flights (id, flight_number, airline_id, origin_airport_id, destination_airport_id,
---                      departure_time, arrival_time, total_seats, base_price_amount, currency, status,
---                      created_at, updated_at) VALUES
---     ('c1111111-1111-1111-1111-111111111111', 'AT100',
---      'a1111111-1111-1111-1111-111111111111',
---      'b1111111-1111-1111-1111-111111111111',
---      'b2222222-2222-2222-2222-222222222222',
---      '2026-07-01T08:00:00Z', '2026-07-01T23:00:00Z', 180, 1200.00, 'USD', 'ACTIVE',
---      now(), now()),
---     ('c2222222-2222-2222-2222-222222222222', 'IB300',
---      'a2222222-2222-2222-2222-222222222222',
---      'b2222222-2222-2222-2222-222222222222',
---      'b3333333-3333-3333-3333-333333333333',
---      '2026-07-02T10:00:00Z', '2026-07-02T18:00:00Z', 220, 1500.00, 'EUR', 'ACTIVE',
---      now(), now());
 
 INSERT INTO airlines (id, iata_code, name, country)
 VALUES (gen_random_uuid(), 'LA', 'LATAM Airlines', 'Chile'),

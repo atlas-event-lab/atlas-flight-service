@@ -1,6 +1,7 @@
 package com.atlas.flight.service;
 
 import com.atlas.flight.client.InventoryClient;
+import com.atlas.flight.shared.messaging.EventType;
 import com.atlas.flight.client.dto.AvailabilityResponse;
 import com.atlas.flight.event.MoneyEvent;
 import com.atlas.flight.dto.CreateFlightRequest;
@@ -76,7 +77,7 @@ class FlightServiceImplTest {
         service.createFlight(FlightTestData.aCreateFlightRequest());
 
         verify(flightRepository).save(any(Flight.class));
-        verify(outboxEventWriter).write(any(UUID.class), eq("FlightCreated"), any());
+        verify(outboxEventWriter).write(any(UUID.class), eq(EventType.FLIGHT_CREATED), any());
     }
 
     @Test
@@ -148,7 +149,7 @@ class FlightServiceImplTest {
 
         service.updateFlight(FlightTestData.FLIGHT_ID, FlightTestData.anUpdateFlightRequest(120));
 
-        verify(outboxEventWriter).write(eq(FlightTestData.FLIGHT_ID), eq("FlightUpdated"), any());
+        verify(outboxEventWriter).write(eq(FlightTestData.FLIGHT_ID), eq(EventType.FLIGHT_UPDATED), any());
     }
 
     @Test
@@ -159,7 +160,7 @@ class FlightServiceImplTest {
         service.updateFlight(FlightTestData.FLIGHT_ID, FlightTestData.anUpdateFlightRequest(220));
 
         verifyNoInteractions(inventoryClient);
-        verify(outboxEventWriter).write(eq(FlightTestData.FLIGHT_ID), eq("FlightUpdated"), any());
+        verify(outboxEventWriter).write(eq(FlightTestData.FLIGHT_ID), eq(EventType.FLIGHT_UPDATED), any());
     }
 
     @Test
@@ -184,7 +185,7 @@ class FlightServiceImplTest {
         service.withdrawFlight(FlightTestData.FLIGHT_ID);
 
         assertThat(flight.getStatus()).isEqualTo(FlightStatus.WITHDRAWN);
-        verify(outboxEventWriter).write(eq(FlightTestData.FLIGHT_ID), eq("FlightDeleted"), any());
+        verify(outboxEventWriter).write(eq(FlightTestData.FLIGHT_ID), eq(EventType.FLIGHT_DELETED), any());
     }
 
     @Test

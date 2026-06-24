@@ -4,6 +4,7 @@ import com.atlas.flight.entity.Flight;
 import com.atlas.flight.event.FlightEventPayloadFactory;
 import com.atlas.flight.messaging.OutboxEventWriter;
 import com.atlas.flight.repository.FlightRepository;
+import com.atlas.flight.shared.messaging.EventType;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ public class FlightCatalogReconciler {
     flights.forEach(flight ->
       outboxEventWriter.write(
           flight.getId(),
-          "FlightCreated",
+          EventType.FLIGHT_CREATED,
           payloadFactory.toCatalogPayload(flight)
     ));
   }

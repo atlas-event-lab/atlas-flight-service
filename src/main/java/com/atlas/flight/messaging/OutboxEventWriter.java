@@ -3,6 +3,7 @@ package com.atlas.flight.messaging;
 import com.atlas.flight.entity.OutboxEvent;
 import com.atlas.flight.repository.OutboxRepository;
 import com.atlas.flight.shared.messaging.EventEnvelope;
+import com.atlas.flight.shared.messaging.EventType;
 import com.atlas.flight.shared.web.CorrelationIdFilter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,14 +43,14 @@ public class OutboxEventWriter {
      * (partitioning.md).
      *
      * @param aggregateId the Flight id (also the Kafka partition key)
-     * @param eventType   event name, e.g. {@code FlightCreated}
+     * @param eventType   produced event type, e.g. {@code FLIGHT_CREATED}
      * @param payload     the business payload (never null, never carries metadata)
      */
-    public void write(UUID aggregateId, String eventType, Object payload) {
+    public void write(UUID aggregateId, EventType eventType, Object payload) {
         try {
             var envelope = new EventEnvelope<>(
                 UUID.randomUUID(),
-                eventType,
+                eventType.name(),
                 EVENT_VERSION,
                 Instant.now(),
                 resolveTraceId(),
