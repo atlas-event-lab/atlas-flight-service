@@ -2,6 +2,7 @@ package com.atlas.flight.service;
 
 import com.atlas.flight.dto.CreateFlightRequest;
 import com.atlas.flight.dto.FlightListResponse;
+import com.atlas.flight.dto.FlightPriceResponse;
 import com.atlas.flight.dto.FlightResponse;
 import com.atlas.flight.dto.UpdateFlightRequest;
 import org.springframework.data.domain.Pageable;
@@ -10,8 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.UUID;
 
 /**
- * Admin catalog operations. Authorization (RBAC {@code ADMIN}) is enforced here, in the
- * business service layer (SEC-004), via {@code @PreAuthorize}.
+ * Flight catalog operations. Admin writes require RBAC {@code ADMIN} (SEC-004) via
+ * {@code @PreAuthorize}. The price read is available to any authenticated caller (ADR-0004).
  */
 public interface FlightService {
 
@@ -29,4 +30,6 @@ public interface FlightService {
 
     @PreAuthorize("hasRole('ADMIN')")
     FlightListResponse listFlights(Pageable pageable);
+
+    FlightPriceResponse getFlightPrice(UUID flightId);
 }

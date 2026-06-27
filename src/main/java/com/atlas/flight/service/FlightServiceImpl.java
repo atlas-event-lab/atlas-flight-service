@@ -4,9 +4,11 @@ import com.atlas.flight.client.InventoryClient;
 import com.atlas.flight.client.dto.AvailabilityResponse;
 import com.atlas.flight.dto.CreateFlightRequest;
 import com.atlas.flight.dto.FlightListResponse;
+import com.atlas.flight.dto.FlightPriceResponse;
 import com.atlas.flight.dto.FlightResponse;
 import com.atlas.flight.dto.FlightSegmentInput;
 import com.atlas.flight.dto.MoneyRequest;
+import com.atlas.flight.dto.MoneyResponse;
 import com.atlas.flight.dto.UpdateFlightRequest;
 import com.atlas.flight.entity.Flight;
 import com.atlas.flight.entity.FlightSegment;
@@ -143,6 +145,16 @@ public class FlightServiceImpl implements FlightService {
     @Transactional(readOnly = true)
     public FlightResponse getFlight(UUID flightId) {
         return flightMapper.toResponse(findFlight(flightId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public FlightPriceResponse getFlightPrice(UUID flightId) {
+        Flight flight = findFlight(flightId);
+        return new FlightPriceResponse(
+                flight.getId(),
+                new MoneyResponse(flight.getBasePrice().getAmount(), flight.getBasePrice().getCurrency()),
+                flight.getStatus());
     }
 
     @Override

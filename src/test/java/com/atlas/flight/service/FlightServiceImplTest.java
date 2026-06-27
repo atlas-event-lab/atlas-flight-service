@@ -3,6 +3,7 @@ package com.atlas.flight.service;
 import com.atlas.flight.client.InventoryClient;
 import com.atlas.flight.shared.messaging.EventType;
 import com.atlas.flight.client.dto.AvailabilityResponse;
+import com.atlas.flight.dto.FlightPriceResponse;
 import com.atlas.flight.event.MoneyEvent;
 import com.atlas.flight.dto.CreateFlightRequest;
 import com.atlas.flight.entity.Flight;
@@ -193,6 +194,40 @@ class FlightServiceImplTest {
         when(flightRepository.findById(FlightTestData.FLIGHT_ID)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.getFlight(FlightTestData.FLIGHT_ID))
+                .isInstanceOf(FlightNotFoundException.class);
+    }
+
+    // ── getFlightPrice (ADR-0004) ─────────────────────────────────────────────
+
+    @Test
+    void getFlightPrice_activeFlight_returnsPrice() {
+        Flight flight = FlightTestData.aFlight();
+        when(flightRepository.findById(FlightTestData.FLIGHT_ID)).thenReturn(Optional.of(flight));
+
+        FlightPriceResponse result = service.getFlightPrice(FlightTestData.FLIGHT_ID);
+
+        assertThat(result.flightId()).isEqualTo(FlightTestData.FLIGHT_ID);
+        assertThat(result.basePrice().amount()).isEqualByComparingTo(new BigDecimal("1200.00"));
+        assertThat(result.basePrice().currency()).isEqualTo("USD");
+        assertThat(result.status()).isEqualTo(FlightStatus.ACTIVE);
+    }
+
+    @Test
+    void getFlightPrice_withdrawnFlight_returnsWithdrawnStatus() {
+        Flight flight = FlightTestData.aFlight();
+        flight.withdraw();
+        when(flightRepository.findById(FlightTestData.FLIGHT_ID)).thenReturn(Optional.of(flight));
+
+        FlightPriceResponse result = service.getFlightPrice(FlightTestData.FLIGHT_ID);
+
+        assertThat(result.status()).isEqualTo(FlightStatus.WITHDRAWN);
+    }
+
+    @Test
+    void getFlightPrice_notFound_throwsFlightNotFoundException() {
+        when(flightRepository.findById(FlightTestData.FLIGHT_ID)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.getFlightPrice(FlightTestData.FLIGHT_ID))
                 .isInstanceOf(FlightNotFoundException.class);
     }
 
