@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8080
 
 springdoc:
   api-docs:
@@ -47,13 +47,15 @@ spring:
 
 clients:
   inventory:
-    base-url: ${INVENTORY_SERVICE_URL:http://localhost:8081}
+    base-url: ${INVENTORY_SERVICE_URL:http://localhost:8080}
 
 atlas:
   outbox:
     poll-interval-ms: ${OUTBOX_POLL_INTERVAL_MS:2000}
 
 management:
+  server:
+    port: 9090
   endpoints:
     web:
       exposure:
@@ -61,6 +63,8 @@ management:
   endpoint:
     health:
       show-details: when-authorized
+      probes:
+        enabled: true
 
 logging:
   level:
