@@ -29,7 +29,7 @@ import java.util.UUID;
  * enforces RBAC and performs entity-to-DTO mapping (coding-standards §Layer Responsibilities).
  */
 @RestController
-@RequestMapping("/admin/api/v1/flights")
+@RequestMapping("/api/v1/flights")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 public class FlightController {

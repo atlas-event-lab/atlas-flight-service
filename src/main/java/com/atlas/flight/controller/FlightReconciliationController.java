@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/admin/flights/reconciliation")
+@RequestMapping("/api/v1/flights/reconciliation")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 public class FlightReconciliationController {
