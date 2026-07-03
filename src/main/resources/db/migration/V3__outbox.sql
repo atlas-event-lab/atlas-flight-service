@@ -15,6 +15,4 @@ CREATE TABLE outbox
     UNIQUE (aggregate_id, event_type, event_version)
 );
 
--- Relay polls unpublished rows oldest-first
--- (coding-standards §Indexes: outbox by status, created_at).
 CREATE INDEX idx_outbox_status_created_at ON outbox (status, created_at);

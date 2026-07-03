@@ -1,5 +1,3 @@
--- Flight catalog: Flight aggregate root + FlightSegment legs.
--- airline_id / *_airport_id are LOCAL lookup references (ARCH-004), never cross-service FKs.
 
 CREATE TABLE flights
 (
@@ -17,7 +15,6 @@ CREATE TABLE flights
     created_at             TIMESTAMP WITH TIME ZONE NOT NULL,
     updated_at             TIMESTAMP WITH TIME ZONE NOT NULL,
     CONSTRAINT pk_flights PRIMARY KEY (id),
-    -- Business uniqueness key (services/flight/service.md): a duplicate create returns 409.
     CONSTRAINT uq_flights_number_departure UNIQUE (flight_number, departure_time)
 );
 

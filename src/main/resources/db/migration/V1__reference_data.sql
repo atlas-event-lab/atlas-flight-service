@@ -1,5 +1,3 @@
--- Seeded reference data: airlines and airports (no CRUD in the MVP).
--- Used to denormalize catalog events with IATA codes / names so Search needs no join (ARCH-004).
 
 CREATE TABLE airlines
 (
