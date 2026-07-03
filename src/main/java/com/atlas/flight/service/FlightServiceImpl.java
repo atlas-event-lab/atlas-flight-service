@@ -144,12 +144,14 @@ public class FlightServiceImpl implements FlightService {
     @Override
     @Transactional(readOnly = true)
     public FlightResponse getFlight(UUID flightId) {
+        log.info("get Flight with Id={}", flightId);
         return flightMapper.toResponse(findFlight(flightId));
     }
 
     @Override
     @Transactional(readOnly = true)
     public FlightPriceResponse getFlightPrice(UUID flightId) {
+        log.info("Get Flight Price for flightId={}", flightId);
         Flight flight = findFlight(flightId);
         return new FlightPriceResponse(
                 flight.getId(),
