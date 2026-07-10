@@ -2,15 +2,11 @@ package com.atlas.flight.messaging;
 
 import com.atlas.flight.entity.OutboxEvent;
 import com.atlas.flight.entity.OutboxStatus;
-import com.atlas.flight.messaging.OutboxRelay;
 import com.atlas.flight.repository.OutboxRepository;
 import com.atlas.flight.shared.messaging.EventTopics;
 import com.atlas.flight.shared.messaging.EventType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -31,12 +27,9 @@ class OutboxRelayTest {
 
     @Mock OutboxRepository outboxRepository;
     @Mock KafkaTemplate<String, Object> kafkaTemplate;
-    @org.mockito.Spy ObjectMapper objectMapper = new ObjectMapper();
 
     @InjectMocks
     OutboxRelay relay;
-
-    @Captor ArgumentCaptor<OutboxEvent> savedEvent;
 
     private OutboxEvent pendingFlightCreated() {
         UUID flightId = UUID.randomUUID();
@@ -48,7 +41,7 @@ class OutboxRelayTest {
     @Test
     void publishPending_sendsToTopic_andMarksPublished() {
         OutboxEvent event = pendingFlightCreated();
-        when(outboxRepository.findTop100ByStatusInOrderByCreatedAtAsc(any())).thenReturn(List.of(event));
+        when(outboxRepository.claimBatchForPublishing()).thenReturn(List.of(event));
         CompletableFuture<SendResult<String, Object>> ok = CompletableFuture.completedFuture(null);
         when(kafkaTemplate.send(eq(EventTopics.FLIGHT_CREATED), eq(event.getAggregateId().toString()), any()))
                 .thenReturn(ok);
@@ -61,7 +54,7 @@ class OutboxRelayTest {
     @Test
     void publishPending_sendFails_marksFailed() {
         OutboxEvent event = pendingFlightCreated();
-        when(outboxRepository.findTop100ByStatusInOrderByCreatedAtAsc(any())).thenReturn(List.of(event));
+        when(outboxRepository.claimBatchForPublishing()).thenReturn(List.of(event));
         CompletableFuture<SendResult<String, Object>> failed = new CompletableFuture<>();
         failed.completeExceptionally(new RuntimeException("broker down"));
         when(kafkaTemplate.send(any(), any(), any())).thenReturn(failed);
