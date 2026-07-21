@@ -7,14 +7,13 @@ import com.atlas.flight.shared.messaging.EventType;
 import com.atlas.flight.shared.web.CorrelationIdFilter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Instant;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
-
-import java.time.Instant;
-import java.util.UUID;
 
 /**
  * Writes catalog events to the Transactional Outbox (EVT-009).
@@ -49,25 +48,18 @@ public class OutboxEventWriter {
     public void write(UUID aggregateId, EventType eventType, Object payload) {
         try {
             var envelope = new EventEnvelope<>(
-                UUID.randomUUID(),
-                eventType.name(),
-                EVENT_VERSION,
-                Instant.now(),
-                resolveTraceId(),
-                resolveCorrelationId(),
-                null,
-                PRODUCER,
-                payload);
-
-            outboxRepository.save(
-                new OutboxEvent(
                     UUID.randomUUID(),
-                    AGGREGATE_TYPE,
-                    aggregateId,
-                    eventType,
+                    eventType.name(),
                     EVENT_VERSION,
-                    serialize(envelope))
-            );
+                    Instant.now(),
+                    resolveTraceId(),
+                    resolveCorrelationId(),
+                    null,
+                    PRODUCER,
+                    payload);
+
+            outboxRepository.save(new OutboxEvent(
+                    UUID.randomUUID(), AGGREGATE_TYPE, aggregateId, eventType, EVENT_VERSION, serialize(envelope)));
         } catch (DuplicateKeyException ignored) {
             log.error("Failed to write outbox event: aggregateId={}, eventType={}", aggregateId, eventType);
         }

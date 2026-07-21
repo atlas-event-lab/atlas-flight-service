@@ -2,14 +2,13 @@ package com.atlas.flight.controller;
 
 import com.atlas.flight.dto.FlightPriceResponse;
 import com.atlas.flight.service.FlightService;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.UUID;
 
 /**
  * Service-readable flight price endpoint (ADR-0004, flight.yaml operationId: getFlightPrice).

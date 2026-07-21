@@ -1,7 +1,6 @@
 package com.atlas.flight.dto;
 
 import com.atlas.flight.entity.FlightStatus;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -18,5 +17,4 @@ public record FlightResponse(
         int totalSeats,
         MoneyResponse basePrice,
         FlightStatus status,
-        List<FlightSegmentResponse> segments
-) {}
+        List<FlightSegmentResponse> segments) {}

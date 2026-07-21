@@ -9,7 +9,7 @@ import java.util.UUID;
 public class CapacityBelowReservedException extends RuntimeException {
 
     public CapacityBelowReservedException(UUID flightId, int newTotalSeats, int reservedCount) {
-        super("Cannot lower totalSeats to " + newTotalSeats + " for flight " + flightId
-                + ": Inventory has " + reservedCount + " seats reserved");
+        super("Cannot lower totalSeats to " + newTotalSeats + " for flight " + flightId + ": Inventory has "
+                + reservedCount + " seats reserved");
     }
 }

@@ -6,6 +6,7 @@ import com.atlas.flight.dto.FlightResponse;
 import com.atlas.flight.dto.UpdateFlightRequest;
 import com.atlas.flight.service.FlightService;
 import jakarta.validation.Valid;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -20,8 +21,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.UUID;
 
 /**
  * REST controller for the admin flight catalog (flight.yaml).
@@ -44,8 +43,7 @@ public class FlightController {
 
     /** GET /api/v1/flights — paginated list (flight.yaml operationId: listFlights). */
     @GetMapping
-    public ResponseEntity<FlightListResponse> listFlights(
-            @PageableDefault(size = 20) Pageable pageable) {
+    public ResponseEntity<FlightListResponse> listFlights(@PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(flightService.listFlights(pageable));
     }
 
@@ -58,8 +56,7 @@ public class FlightController {
     /** PUT /api/v1/flights/{flightId} — updates a flight (flight.yaml operationId: updateFlight). */
     @PutMapping("/{flightId}")
     public ResponseEntity<FlightResponse> updateFlight(
-            @PathVariable UUID flightId,
-            @RequestBody @Valid UpdateFlightRequest request) {
+            @PathVariable UUID flightId, @RequestBody @Valid UpdateFlightRequest request) {
         return ResponseEntity.ok(flightService.updateFlight(flightId, request));
     }
 

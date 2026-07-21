@@ -1,5 +1,12 @@
 package com.atlas.flight.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.atlas.flight.entity.Flight;
 import com.atlas.flight.entity.FlightStatus;
 import com.atlas.flight.event.FlightDeletedPayload;
@@ -10,13 +17,6 @@ import com.atlas.flight.shared.messaging.EventType;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 class FlightCatalogReconcilerTest {
 
@@ -40,8 +40,7 @@ class FlightCatalogReconcilerTest {
         ResyncResult result = reconciler.resyncAll();
 
         verify(outboxEventWriter).write(eq(activeId), eq(EventType.FLIGHT_CREATED), any());
-        verify(outboxEventWriter).write(eq(withdrawnId), eq(EventType.FLIGHT_DELETED),
-                any(FlightDeletedPayload.class));
+        verify(outboxEventWriter).write(eq(withdrawnId), eq(EventType.FLIGHT_DELETED), any(FlightDeletedPayload.class));
         assertThat(result.active()).isEqualTo(1);
         assertThat(result.withdrawn()).isEqualTo(1);
         assertThat(result.total()).isEqualTo(2);

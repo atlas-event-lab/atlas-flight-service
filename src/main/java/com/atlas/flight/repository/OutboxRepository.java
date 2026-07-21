@@ -1,11 +1,10 @@
 package com.atlas.flight.repository;
 
 import com.atlas.flight.entity.OutboxEvent;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 /** Repository for the Transactional Outbox (EVT-009). Accesses only local entities (DB-004). */
 public interface OutboxRepository extends JpaRepository<OutboxEvent, UUID> {
@@ -18,12 +17,15 @@ public interface OutboxRepository extends JpaRepository<OutboxEvent, UUID> {
      * relay's transaction so the locks are held until the rows are marked PUBLISHED / FAILED.
      * Backed by the {@code (status, created_at)} index.
      */
-    @Query(value = """
+    @Query(
+            value =
+                    """
             SELECT * FROM outbox
             WHERE status IN ('PENDING', 'FAILED')
             ORDER BY created_at
             LIMIT 100
             FOR UPDATE SKIP LOCKED
-            """, nativeQuery = true)
+            """,
+            nativeQuery = true)
     List<OutboxEvent> claimBatchForPublishing();
 }

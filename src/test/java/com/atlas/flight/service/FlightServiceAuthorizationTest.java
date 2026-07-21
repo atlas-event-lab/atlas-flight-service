@@ -1,5 +1,10 @@
 package com.atlas.flight.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.atlas.flight.client.InventoryClient;
 import com.atlas.flight.event.FlightEventPayloadFactory;
 import com.atlas.flight.mapper.FlightMapper;
@@ -8,6 +13,7 @@ import com.atlas.flight.repository.AirlineRepository;
 import com.atlas.flight.repository.AirportRepository;
 import com.atlas.flight.repository.FlightRepository;
 import com.atlas.flight.support.FlightTestData;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +26,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 /**
  * Verifies that RBAC {@code ADMIN} is enforced inside the business service via
@@ -41,13 +40,26 @@ class FlightServiceAuthorizationTest {
     @EnableMethodSecurity
     static class MethodSecurityConfig {}
 
-    @MockitoBean FlightRepository flightRepository;
-    @MockitoBean AirlineRepository airlineRepository;
-    @MockitoBean AirportRepository airportRepository;
-    @MockitoBean InventoryClient inventoryClient;
-    @MockitoBean OutboxEventWriter outboxEventWriter;
-    @MockitoBean FlightEventPayloadFactory payloadFactory;
-    @MockitoBean FlightMapper flightMapper;
+    @MockitoBean
+    FlightRepository flightRepository;
+
+    @MockitoBean
+    AirlineRepository airlineRepository;
+
+    @MockitoBean
+    AirportRepository airportRepository;
+
+    @MockitoBean
+    InventoryClient inventoryClient;
+
+    @MockitoBean
+    OutboxEventWriter outboxEventWriter;
+
+    @MockitoBean
+    FlightEventPayloadFactory payloadFactory;
+
+    @MockitoBean
+    FlightMapper flightMapper;
 
     @Autowired
     FlightService flightService;

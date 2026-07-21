@@ -7,10 +7,9 @@ import com.atlas.flight.entity.FlightSegment;
 import com.atlas.flight.exception.InvalidFlightException;
 import com.atlas.flight.repository.AirlineRepository;
 import com.atlas.flight.repository.AirportRepository;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 /**
  * Builds denormalized catalog event payloads (ARCH-004, EVT-006). Resolves the airline and
@@ -26,7 +25,8 @@ public class FlightEventPayloadFactory {
     private final AirportRepository airportRepository;
 
     public FlightCatalogPayload toCatalogPayload(Flight flight) {
-        Airline airline = airlineRepository.findById(flight.getAirlineId())
+        Airline airline = airlineRepository
+                .findById(flight.getAirlineId())
                 .orElseThrow(() -> new InvalidFlightException("Airline not found: " + flight.getAirlineId()));
 
         return new FlightCatalogPayload(
@@ -39,7 +39,8 @@ public class FlightEventPayloadFactory {
                 flight.getDepartureTime(),
                 flight.getArrivalTime(),
                 flight.getTotalSeats(),
-                new MoneyEvent(flight.getBasePrice().getAmount(), flight.getBasePrice().getCurrency()),
+                new MoneyEvent(
+                        flight.getBasePrice().getAmount(), flight.getBasePrice().getCurrency()),
                 flight.getSegments().stream().map(this::toSegmentEvent).toList());
     }
 
@@ -53,7 +54,8 @@ public class FlightEventPayloadFactory {
     }
 
     private String airportCode(UUID airportId) {
-        return airportRepository.findById(airportId)
+        return airportRepository
+                .findById(airportId)
                 .map(Airport::getIataCode)
                 .orElseThrow(() -> new InvalidFlightException("Airport not found: " + airportId));
     }

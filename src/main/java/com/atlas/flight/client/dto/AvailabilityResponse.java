@@ -7,10 +7,4 @@ import java.util.UUID;
  * Only {@code reservedCount} is consumed here, for capacity-shrink validation.
  */
 public record AvailabilityResponse(
-        String resourceType,
-        UUID resourceId,
-        int totalCapacity,
-        int reservedCount,
-        int available,
-        String status
-) {}
+        String resourceType, UUID resourceId, int totalCapacity, int reservedCount, int available, String status) {}

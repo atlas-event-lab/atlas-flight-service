@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize("hasRole('ADMIN')")
 public class FlightReconciliationController {
 
-  private final FlightCatalogReconciler reconciler;
+    private final FlightCatalogReconciler reconciler;
 
-  @PostMapping
-  public ResponseEntity<String> reconcile() {
-    reconciler.reconcile();
-    return ResponseEntity.ok("SUCCESS");
-  }
+    @PostMapping
+    public ResponseEntity<String> reconcile() {
+        reconciler.reconcile();
+        return ResponseEntity.ok("SUCCESS");
+    }
 }

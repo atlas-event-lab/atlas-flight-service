@@ -14,6 +14,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -22,12 +27,6 @@ import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Aggregate Root for the flight catalog. Owns descriptive data, schedule, total seat
@@ -73,8 +72,10 @@ public class Flight {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "amount",   column = @Column(name = "base_price_amount", nullable = false, precision = 19, scale = 2)),
-            @AttributeOverride(name = "currency", column = @Column(name = "currency",          nullable = false, length = 3))
+        @AttributeOverride(
+                name = "amount",
+                column = @Column(name = "base_price_amount", nullable = false, precision = 19, scale = 2)),
+        @AttributeOverride(name = "currency", column = @Column(name = "currency", nullable = false, length = 3))
     })
     private Money basePrice;
 
@@ -94,10 +95,17 @@ public class Flight {
     @OrderBy("sequence ASC")
     private List<FlightSegment> segments = new ArrayList<>();
 
-    public Flight(UUID id, String flightNumber, UUID airlineId,
-                  UUID originAirportId, UUID destinationAirportId,
-                  Instant departureTime, Instant arrivalTime,
-                  int totalSeats, Money basePrice, FlightStatus status) {
+    public Flight(
+            UUID id,
+            String flightNumber,
+            UUID airlineId,
+            UUID originAirportId,
+            UUID destinationAirportId,
+            Instant departureTime,
+            Instant arrivalTime,
+            int totalSeats,
+            Money basePrice,
+            FlightStatus status) {
         this.id = id;
         this.flightNumber = flightNumber;
         this.airlineId = airlineId;
@@ -111,10 +119,15 @@ public class Flight {
     }
 
     /** Replaces catalog/schedule/price/capacity fields on update (PUT semantics). */
-    public void update(String flightNumber, UUID airlineId,
-                       UUID originAirportId, UUID destinationAirportId,
-                       Instant departureTime, Instant arrivalTime,
-                       int totalSeats, Money basePrice) {
+    public void update(
+            String flightNumber,
+            UUID airlineId,
+            UUID originAirportId,
+            UUID destinationAirportId,
+            Instant departureTime,
+            Instant arrivalTime,
+            int totalSeats,
+            Money basePrice) {
         this.flightNumber = flightNumber;
         this.airlineId = airlineId;
         this.originAirportId = originAirportId;

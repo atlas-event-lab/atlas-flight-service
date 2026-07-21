@@ -15,7 +15,6 @@ import com.atlas.flight.entity.FlightSegment;
 import com.atlas.flight.entity.FlightStatus;
 import com.atlas.flight.entity.Money;
 import com.atlas.flight.event.FlightDeletedPayload;
-import com.atlas.flight.shared.messaging.EventType;
 import com.atlas.flight.event.FlightEventPayloadFactory;
 import com.atlas.flight.exception.CapacityBelowReservedException;
 import com.atlas.flight.exception.DuplicateFlightException;
@@ -27,16 +26,16 @@ import com.atlas.flight.messaging.OutboxEventWriter;
 import com.atlas.flight.repository.AirlineRepository;
 import com.atlas.flight.repository.AirportRepository;
 import com.atlas.flight.repository.FlightRepository;
+import com.atlas.flight.shared.messaging.EventType;
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Flight catalog service. Validates input, persists the catalog entity and its event in one
@@ -63,11 +62,10 @@ public class FlightServiceImpl implements FlightService {
     @Transactional
     public FlightResponse createFlight(CreateFlightRequest request) {
         validateSchedule(request.departureTime(), request.arrivalTime());
-        validateReferences(request.airlineId(), request.originAirportId(),
-                request.destinationAirportId(), request.segments());
+        validateReferences(
+                request.airlineId(), request.originAirportId(), request.destinationAirportId(), request.segments());
 
-        if (flightRepository.existsByFlightNumberAndDepartureTime(
-                request.flightNumber(), request.departureTime())) {
+        if (flightRepository.existsByFlightNumberAndDepartureTime(request.flightNumber(), request.departureTime())) {
             throw new DuplicateFlightException(request.flightNumber(), request.departureTime());
         }
 
@@ -87,8 +85,11 @@ public class FlightServiceImpl implements FlightService {
         Flight saved = flightRepository.save(flight);
         outboxEventWriter.write(saved.getId(), EventType.FLIGHT_CREATED, payloadFactory.toCatalogPayload(saved));
 
-        log.info("Flight created: flightId={}, flightNumber={}, totalSeats={}",
-                saved.getId(), saved.getFlightNumber(), saved.getTotalSeats());
+        log.info(
+                "Flight created: flightId={}, flightNumber={}, totalSeats={}",
+                saved.getId(),
+                saved.getFlightNumber(),
+                saved.getTotalSeats());
 
         return flightMapper.toResponse(saved);
     }
@@ -97,8 +98,8 @@ public class FlightServiceImpl implements FlightService {
     @Transactional
     public FlightResponse updateFlight(UUID flightId, UpdateFlightRequest request) {
         validateSchedule(request.departureTime(), request.arrivalTime());
-        validateReferences(request.airlineId(), request.originAirportId(),
-                request.destinationAirportId(), request.segments());
+        validateReferences(
+                request.airlineId(), request.originAirportId(), request.destinationAirportId(), request.segments());
 
         Flight flight = findFlight(flightId);
 
@@ -125,8 +126,11 @@ public class FlightServiceImpl implements FlightService {
 
         outboxEventWriter.write(flight.getId(), EventType.FLIGHT_UPDATED, payloadFactory.toCatalogPayload(flight));
 
-        log.info("Flight updated: flightId={}, flightNumber={}, totalSeats={}",
-                flight.getId(), flight.getFlightNumber(), flight.getTotalSeats());
+        log.info(
+                "Flight updated: flightId={}, flightNumber={}, totalSeats={}",
+                flight.getId(),
+                flight.getFlightNumber(),
+                flight.getTotalSeats());
 
         return flightMapper.toResponse(flight);
     }
@@ -155,7 +159,8 @@ public class FlightServiceImpl implements FlightService {
         Flight flight = findFlight(flightId);
         return new FlightPriceResponse(
                 flight.getId(),
-                new MoneyResponse(flight.getBasePrice().getAmount(), flight.getBasePrice().getCurrency()),
+                new MoneyResponse(
+                        flight.getBasePrice().getAmount(), flight.getBasePrice().getCurrency()),
                 flight.getStatus());
     }
 
@@ -176,8 +181,8 @@ public class FlightServiceImpl implements FlightService {
         }
     }
 
-    private void validateReferences(UUID airlineId, UUID originAirportId, UUID destinationAirportId,
-                                    List<FlightSegmentInput> segments) {
+    private void validateReferences(
+            UUID airlineId, UUID originAirportId, UUID destinationAirportId, List<FlightSegmentInput> segments) {
         if (!airlineRepository.existsById(airlineId)) {
             throw new InvalidFlightException("Airline not found: " + airlineId);
         }
@@ -215,15 +220,17 @@ public class FlightServiceImpl implements FlightService {
     }
 
     private void applySegments(Flight flight, List<FlightSegmentInput> segments) {
-        List<FlightSegment> mapped = (segments == null) ? List.of() : segments.stream()
-                .map(s -> new FlightSegment(
-                        UUID.randomUUID(),
-                        s.sequence(),
-                        s.originAirportId(),
-                        s.destinationAirportId(),
-                        s.departureTime(),
-                        s.arrivalTime()))
-                .toList();
+        List<FlightSegment> mapped = (segments == null)
+                ? List.of()
+                : segments.stream()
+                        .map(s -> new FlightSegment(
+                                UUID.randomUUID(),
+                                s.sequence(),
+                                s.originAirportId(),
+                                s.destinationAirportId(),
+                                s.departureTime(),
+                                s.arrivalTime()))
+                        .toList();
         flight.replaceSegments(mapped);
     }
 
@@ -232,7 +239,6 @@ public class FlightServiceImpl implements FlightService {
     }
 
     private Flight findFlight(UUID flightId) {
-        return flightRepository.findById(flightId)
-                .orElseThrow(() -> new FlightNotFoundException(flightId));
+        return flightRepository.findById(flightId).orElseThrow(() -> new FlightNotFoundException(flightId));
     }
 }

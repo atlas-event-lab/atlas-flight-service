@@ -5,10 +5,9 @@ import com.atlas.flight.dto.FlightListResponse;
 import com.atlas.flight.dto.FlightPriceResponse;
 import com.atlas.flight.dto.FlightResponse;
 import com.atlas.flight.dto.UpdateFlightRequest;
+import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-
-import java.util.UUID;
 
 /**
  * Flight catalog operations. Admin writes require RBAC {@code ADMIN} (SEC-004) via

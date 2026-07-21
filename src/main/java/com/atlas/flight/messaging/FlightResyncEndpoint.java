@@ -21,10 +21,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FlightResyncEndpoint {
 
-  private final FlightCatalogReconciler reconciler;
+    private final FlightCatalogReconciler reconciler;
 
-  @WriteOperation
-  public ResyncResult resync() {
-    return reconciler.resyncAll();
-  }
+    @WriteOperation
+    public ResyncResult resync() {
+        return reconciler.resyncAll();
+    }
 }

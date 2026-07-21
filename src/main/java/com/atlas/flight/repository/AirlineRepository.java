@@ -1,10 +1,8 @@
 package com.atlas.flight.repository;
 
 import com.atlas.flight.entity.Airline;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.UUID;
-
 /** Repository for seeded Airline reference data. */
-public interface AirlineRepository extends JpaRepository<Airline, UUID> {
-}
+public interface AirlineRepository extends JpaRepository<Airline, UUID> {}

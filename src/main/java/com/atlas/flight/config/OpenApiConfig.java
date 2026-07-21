@@ -8,13 +8,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfig {
 
-  @Bean
-  public OpenAPI customOpenAPI() {
-    return new OpenAPI()
-        .info(new Info()
-            .title("Hotel Service API")
-            .version("v1")
-            .description("Hotel catalog API"));
-  }
-
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info().title("Hotel Service API").version("v1").description("Hotel catalog API"));
+    }
 }

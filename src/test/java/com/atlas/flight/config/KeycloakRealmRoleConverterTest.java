@@ -1,14 +1,13 @@
 package com.atlas.flight.config;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 class KeycloakRealmRoleConverterTest {
 
@@ -26,7 +25,8 @@ class KeycloakRealmRoleConverterTest {
 
         Collection<GrantedAuthority> authorities = converter.convert(jwt);
 
-        assertThat(authorities).extracting(GrantedAuthority::getAuthority)
+        assertThat(authorities)
+                .extracting(GrantedAuthority::getAuthority)
                 .containsExactlyInAnyOrder("ROLE_ADMIN", "ROLE_USER");
     }
 

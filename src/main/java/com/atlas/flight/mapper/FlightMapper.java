@@ -6,10 +6,9 @@ import com.atlas.flight.dto.MoneyResponse;
 import com.atlas.flight.entity.Flight;
 import com.atlas.flight.entity.FlightSegment;
 import com.atlas.flight.entity.Money;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.List;
 
 /** Maps Flight entities to API response DTOs (mapping is a service-layer concern). */
 @Mapper(componentModel = "spring")

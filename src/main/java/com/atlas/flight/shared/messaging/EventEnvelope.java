@@ -19,5 +19,4 @@ public record EventEnvelope<T>(
         String correlationId,
         String sagaId,
         String producer,
-        T payload
-) {}
+        T payload) {}

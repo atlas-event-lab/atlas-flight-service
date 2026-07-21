@@ -1,14 +1,13 @@
 package com.atlas.flight.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.atlas.flight.dto.FlightResponse;
 import com.atlas.flight.entity.Flight;
 import com.atlas.flight.entity.FlightSegment;
 import com.atlas.flight.support.FlightTestData;
-import org.junit.jupiter.api.Test;
-
 import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class FlightMapperTest {
 
@@ -18,8 +17,12 @@ class FlightMapperTest {
     void toResponse_maps_id_to_flightId_money_and_segments() {
         Flight flight = FlightTestData.aFlight();
         flight.addSegment(new FlightSegment(
-                UUID.randomUUID(), 1, FlightTestData.ORIGIN_ID, FlightTestData.DEST_ID,
-                FlightTestData.DEPARTURE, FlightTestData.ARRIVAL));
+                UUID.randomUUID(),
+                1,
+                FlightTestData.ORIGIN_ID,
+                FlightTestData.DEST_ID,
+                FlightTestData.DEPARTURE,
+                FlightTestData.ARRIVAL));
 
         FlightResponse response = mapper.toResponse(flight);
 
